@@ -1,8 +1,14 @@
 import express from 'express';
 import UserModel from '../models/usermodel.js';
+import { loginUser, registerUser } from '../controllers/usercontroller.js';
 
 const router = express.Router();
 
+// Rutas para login y registro
+router.post('/login', loginUser);
+router.post('/register', registerUser);
+
+// Obtener todos los usuarios
 router.get('/', async (req, res) => {
     try {
         const users = await UserModel.find();
@@ -12,6 +18,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Crear un nuevo usuario
 router.post('/', async (req, res) => {
     const { name, mail, number } = req.body;
     const newUser = new UserModel({ name, mail, number });
@@ -24,10 +31,12 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Obtener un usuario por ID
 router.get('/:id', getUser, (req, res) => {
     res.json(res.user);
 });
 
+// Middleware para obtener un usuario por ID
 async function getUser(req, res, next) {
     let user;
     try {
@@ -43,6 +52,7 @@ async function getUser(req, res, next) {
     next();
 }
 
+// Actualizar un usuario
 router.patch('/:id', getUser, async (req, res) => {
     if (req.body.name != null) {
         res.user.name = req.body.name;
@@ -62,6 +72,7 @@ router.patch('/:id', getUser, async (req, res) => {
     }
 });
 
+// Eliminar un usuario
 router.delete('/:id', getUser, async (req, res) => {
     try {
         await res.user.remove();

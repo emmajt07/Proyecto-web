@@ -1,5 +1,4 @@
 import React from 'react';
-import './AddPropertyPage.css';
 
 const AddPropertyPage = () => {
   return (
